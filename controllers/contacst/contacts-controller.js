@@ -18,9 +18,6 @@ const getById = async (req, res, next) => {
   res.json(result);
 };
 const add = async (req, res, next) => {
-  const { error } = contactsAddSchema.validate(req.body);
-  if (error) throw HttpError(400, error.message);
-
   const result = await contactsService.addContact(req.body);
   res.status(201).json(result);
 };
@@ -35,10 +32,6 @@ const deleteById = async (req, res, next) => {
 const updateById = async (req, res, next) => {
   const result = await contactsService.updateContact(req.params.id, req.body);
   if (!result) throw HttpError(404, `Not found`);
-
-  const { error } = contactsUpdadeSchema.validate(req.body);
-  if (error) throw HttpError(400, error.message);
-
   res.json(result);
 };
 
