@@ -1,5 +1,5 @@
 import { Router } from "express";
-import * as contactsController from "../../controllers/contacst/contacts-controller.js";
+import contactsController from "../../controllers/contacst/contacts-controller.js";
 import { isEmptyBody } from "../../middlewares/index.js";
 
 const contactsRouter = Router();
