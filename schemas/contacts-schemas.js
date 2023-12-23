@@ -13,10 +13,15 @@ export const contactsAddSchema = Joi.object({
   phone: Joi.string()
     .required()
     .messages({ "any.required": "missing required phone field" }),
+  favorite: Joi.boolean().default(false),
 });
 
 export const contactsUpdadeSchema = Joi.object({
   name: Joi.string(),
   email: Joi.string(),
   phone: Joi.string(),
+});
+
+export const contactsUpdateFavoriteSchema = Joi.object({
+  favorite: Joi.boolean().required(),
 });
