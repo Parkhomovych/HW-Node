@@ -1,18 +1,21 @@
 import { Router } from "express";
 import contactsController from "../../controllers/contacst/contacts-controller.js";
 import {
-  isEmptyBodyUpdate,
+  isEmptyBody,
   isEmptyBodyFavorite,
   isValidId,
+  authenticate,
 } from "../../middlewares/index.js";
 import { validateBody } from "../../decorators/index.js";
 import {
   contactsAddSchema,
   contactsUpdadeSchema,
   contactsUpdateFavoriteSchema,
-} from "../../schemas/contacts-schemas.js";
+} from "../../models/Contacts.js";
 
 const contactsRouter = Router();
+
+contactsRouter.use(authenticate);
 
 contactsRouter.get("/", contactsController.getAll);
 
@@ -20,14 +23,14 @@ contactsRouter.get("/:id", isValidId, contactsController.getById);
 
 contactsRouter.post(
   "/",
-  isEmptyBodyUpdate,
+  isEmptyBody,
   validateBody(contactsAddSchema),
   contactsController.add
 );
 
 contactsRouter.put(
   "/:id",
-  isEmptyBodyUpdate,
+  isEmptyBody,
   isValidId,
   validateBody(contactsUpdadeSchema),
   contactsController.updateById
