@@ -18,8 +18,8 @@ usersRouter.post(
   validateBody(userSingupSchema),
   usersController.login
 );
-usersRouter.get("/current", authenticate, usersController.getCurrent);
-
 usersRouter.post("/logout", authenticate, usersController.logout);
+
+usersRouter.get("/current", authenticate, usersController.getCurrent);
 
 export default usersRouter;
