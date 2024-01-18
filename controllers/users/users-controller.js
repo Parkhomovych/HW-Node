@@ -3,16 +3,29 @@ import { ctrlWrapper } from "../../decorators/index.js";
 import Users from "../../models/Users.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import fs from "fs/promises";
+import path from "path";
+import gravatar from "gravatar";
+import jimp from "jimp";
+
+const avatarPath = path.join("public", "avatars");
 
 const register = async (req, res) => {
   const { password, email } = req.body;
+
+  const avatarURL = gravatar.url(email).slice(2);
   const hashPassword = await bcrypt.hash(password, 10);
-  const newUser = await Users.create({ ...req.body, password: hashPassword });
+
+  const newUser = await Users.create({
+    ...req.body,
+    avatarURL,
+    password: hashPassword,
+  });
 
   res.status(201).json({
     user: {
-      email,
-      subscription: "starter",
+      email: newUser.email,
+      subscription: newUser.subscription,
     },
   });
 };
@@ -53,9 +66,26 @@ const logout = async (req, res) => {
   });
 };
 
+const updateAvatar = async (req, res) => {
+  const { path: oldPath, filename } = req.file;
+
+  const newPath = path.join(avatarPath, filename);
+  await fs.rename(oldPath, newPath);
+
+  const image = await jimp.read(newPath); // Read the image.
+  await image.resize(250, 250); // Resize the image to width 250 and  height 250.
+  await image.writeAsync(newPath); // Save and overwrite the image
+
+  const avatarURL = path.join("avatrs", filename);
+  await Users.findByIdAndUpdate(req.user._id, { avatarURL });
+
+  res.json({ avatarURL });
+};
+
 export default {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   getCurrent: ctrlWrapper(getCurrent),
   logout: ctrlWrapper(logout),
+  updateAvatar: ctrlWrapper(updateAvatar),
 };
