@@ -67,7 +67,6 @@ const logout = async (req, res) => {
 };
 
 const updateAvatar = async (req, res) => {
-  console.log(req.file);
   if(!req.file) throw HttpError(400,"the file was not transferred")
   const { path: oldPath, filename } = req.file;
 
