@@ -67,6 +67,8 @@ const logout = async (req, res) => {
 };
 
 const updateAvatar = async (req, res) => {
+  console.log(req.file);
+  if(!req.file) throw HttpError(400,"the file was not transferred")
   const { path: oldPath, filename } = req.file;
 
   const newPath = path.join(avatarPath, filename);
@@ -76,7 +78,7 @@ const updateAvatar = async (req, res) => {
   await image.resize(250, 250); // Resize the image to width 250 and  height 250.
   await image.writeAsync(newPath); // Save and overwrite the image
 
-  const avatarURL = path.join("avatrs", filename);
+  const avatarURL = path.join("avatars", filename);
   await Users.findByIdAndUpdate(req.user._id, { avatarURL });
 
   res.json({ avatarURL });
