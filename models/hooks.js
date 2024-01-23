@@ -1,5 +1,6 @@
 export const handlerSaveError = (error, data, next) => {
   const { name, code } = error;
+  console.log(error.message);
   if (name === "MongoServerError" && code === 11000) {
     error.status = 409;
     error.message = "Email in use";

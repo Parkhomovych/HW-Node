@@ -3,19 +3,29 @@ import usersController from "../../controllers/users/users-controller.js";
 import { authenticate, isEmptyBody, upload } from "../../middlewares/index.js";
 
 import { validateBody } from "../../decorators/index.js";
-import { userSingupSchema } from "../../models/Users.js";
+import { userSchema, userEmailSchema } from "../../models/Users.js";
 const usersRouter = Router();
 
 usersRouter.post(
   "/register",
+  validateBody(userSchema),
   isEmptyBody,
-  validateBody(userSingupSchema),
   usersController.register
 );
+
+usersRouter.get("/verify/:verificationToken", usersController.verify);
+
+usersRouter.post(
+  "/veryfi",
+  validateBody(userEmailSchema),
+  isEmptyBody,
+  usersController.resendVerifyEmail
+);
+
 usersRouter.post(
   "/login",
   isEmptyBody,
-  validateBody(userSingupSchema),
+  validateBody(userSchema),
   usersController.login
 );
 usersRouter.post("/logout", authenticate, usersController.logout);
