@@ -22,18 +22,31 @@ const usersSchema = new Schema(
     },
     token: String,
     avatarURL: String,
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      required: [true, "Verify token is required"],
+    },
   },
   { versionKey: false, timestamps: true }
 );
 
 usersSchema.post("save", handlerSaveError);
-usersSchema.pre("findOneAndUpdate", addUpdateSettings);
-usersSchema.post("findOneAndUpdate", handlerSaveError);
+usersSchema.pre("findByIdAndUpdate", addUpdateSettings); //findByIdAndUpdate
+usersSchema.post("findByIdAndUpdate", handlerSaveError);
 
-export const userSingupSchema = Joi.object({
+export const userSchema = Joi.object({
   email: Joi.string().required(),
   password: Joi.string().required(),
 });
 
+export const userEmailSchema = Joi.object({
+  email: Joi.string()
+    .required()
+    .messages({ "any.required": "missing required field email" }),
+});
 const Users = model("user", usersSchema);
 export default Users;
