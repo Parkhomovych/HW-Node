@@ -16,7 +16,7 @@ usersRouter.post(
 usersRouter.get("/verify/:verificationToken", usersController.verify);
 
 usersRouter.post(
-  "/veryfi",
+  "/verify",
   validateBody(userEmailSchema),
   isEmptyBody,
   usersController.resendVerifyEmail
